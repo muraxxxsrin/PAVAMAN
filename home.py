@@ -1,87 +1,96 @@
+
 from advisory import get_advisory
 import streamlit as st
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import numpy as np
 from PIL import Image
+from io import BytesIO
+import base64
 
+# Load model once and cache
 @st.cache_resource
 def load_my_model():
     return load_model("my_model.h5")
 
+# Class labels
 class_labels = [
-    'Apple___Apple_scab',
-    'Apple___Black_rot',
-    'Apple___Cedar_apple_rust',
-    'Apple___healthy',
-    'Blueberry___healthy',
-    'Cherry_(including_sour)___Powdery_mildew',
-    'Cherry_(including_sour)___healthy',
-    'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot',
-    'Corn_(maize)___Common_rust_',
-    'Corn_(maize)___Northern_Leaf_Blight',
-    'Corn_(maize)___healthy',
-    'Grape___Black_rot',
-    'Grape___Esca_(Black_Measles)',
-    'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)',
-    'Grape___healthy',
-    'Orange___Haunglongbing_(Citrus_greening)',
-    'Peach___Bacterial_spot',
-    'Peach___healthy',
-    'Pepper,_bell___Bacterial_spot',
-    'Pepper,_bell___healthy',
-    'Potato___Early_blight',
-    'Potato___Late_blight',
-    'Potato___healthy',
-    'Raspberry___healthy',
-    'Soybean___healthy',
-    'Squash___Powdery_mildew',
-    'Strawberry___Leaf_scorch',
-    'Strawberry___healthy',
-    'Tomato___Bacterial_spot',
-    'Tomato___Early_blight',
-    'Tomato___Late_blight',
-    'Tomato___Leaf_Mold',
-    'Tomato___Septoria_leaf_spot',
-    'Tomato___Spider_mites Two-spotted_spider_mite',
-    'Tomato___Target_Spot',
-    'Tomato___Tomato_Yellow_Leaf_Curl_Virus',
-    'Tomato___Tomato_mosaic_virus',
-    'Tomato___healthy'
+    'Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust', 'Apple___healthy',
+    'Blueberry___healthy', 'Cherry_(including_sour)___Powdery_mildew', 'Cherry_(including_sour)___healthy',
+    'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot', 'Corn_(maize)___Common_rust_',
+    'Corn_(maize)___Northern_Leaf_Blight', 'Corn_(maize)___healthy', 'Grape___Black_rot',
+    'Grape___Esca_(Black_Measles)', 'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)', 'Grape___healthy',
+    'Orange___Haunglongbing_(Citrus_greening)', 'Peach___Bacterial_spot', 'Peach___healthy',
+    'Pepper,_bell___Bacterial_spot', 'Pepper,_bell___healthy', 'Potato___Early_blight',
+    'Potato___Late_blight', 'Potato___healthy', 'Raspberry___healthy', 'Soybean___healthy',
+    'Squash___Powdery_mildew', 'Strawberry___Leaf_scorch', 'Strawberry___healthy',
+    'Tomato___Bacterial_spot', 'Tomato___Early_blight', 'Tomato___Late_blight',
+    'Tomato___Leaf_Mold', 'Tomato___Septoria_leaf_spot',
+    'Tomato___Spider_mites Two-spotted_spider_mite', 'Tomato___Target_Spot',
+    'Tomato___Tomato_Yellow_Leaf_Curl_Virus', 'Tomato___Tomato_mosaic_virus', 'Tomato___healthy'
 ]
 
+# Convert image to base64 for HTML rendering
+def image_to_base64(img):
+    buffer = BytesIO()
+    img.save(buffer, format="JPEG")
+    return base64.b64encode(buffer.getvalue()).decode()
+
+# Predict the class of a leaf image
 def predict_disease(img: Image.Image, model, class_labels):
-    """
-    Takes a PIL Image, preprocesses it, predicts disease class,
-    and returns the predicted class label and confidence score.
-    """
     img = img.resize((160, 160))
     img_array = image.img_to_array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
-    
+
     prediction = model.predict(img_array)
     predicted_class = class_labels[np.argmax(prediction)]
-    
     confidence = np.max(prediction) * 100
     return predicted_class, confidence
 
+# Main Streamlit app
 def app():
     st.title("🍃 Plant Disease Predictor")
 
-    uploaded_file = st.file_uploader("Upload leaf image", type=["jpg","jpeg","png"])
+    uploaded_file = st.file_uploader("Upload leaf image", type=["jpg", "jpeg", "png"])
     if uploaded_file is not None:
         img = Image.open(uploaded_file)
-        st.image(img, width=400)
-
         model = load_my_model()
         predicted_class, confidence = predict_disease(img, model, class_labels)
         advisory = get_advisory(predicted_class)
-        
-        st.text(f"Prediction: {predicted_class} Confidence: {confidence:.2f}%")
-        st.text(f"Predicted Disease:{advisory['disease_name']}")
-        st.text(f"Description:{advisory['description']}")
-        st.text(f"Treatment:{advisory['treatment']}")
-        st.text(f"Prevention:{advisory['prevention']}")
-        st.text(f"Youtube Link:{advisory['youtube_link']}")
-        
+
+        # Split layout for image and video
+        left_col, right_col = st.columns(2)
+
+        with left_col:
+            st.markdown(
+                f"""
+                <img src="data:image/jpeg;base64,{image_to_base64(img)}"
+                     width="350" height="250"
+                     style="object-fit: cover; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.2);">
+                """,
+                unsafe_allow_html=True
+            )
+
+        with right_col:
+            youtube_embed = advisory["youtube_link"].replace("watch?v=", "embed/")
+            st.markdown(
+                f"""
+                <iframe width="350" height="250"
+                        src="{youtube_embed}"
+                        frameborder="0"
+                        allowfullscreen
+                        style="border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.2);">
+                </iframe>
+                """,
+                unsafe_allow_html=True
+            )
+
+        # Display predictions and info below
+        st.markdown("---")
+        st.markdown(f"**Prediction:** {predicted_class}")
+        st.markdown(f"**Confidence:** {confidence:.2f}%")
+        st.markdown(f"**Disease Name:** {advisory['disease_name']}")
+        st.markdown(f"**Description:** {advisory['description']}")
+        st.markdown(f"**Treatment:** {advisory['treatment']}")
+        st.markdown(f"**Prevention:** {advisory['prevention']}")
 

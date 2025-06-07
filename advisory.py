@@ -269,7 +269,7 @@ advisory_data = {
         'description': 'Virus causing mottled leaves and stunted growth.',
         'treatment': 'No chemical treatment; remove infected plants.',
         'prevention': 'Use virus-free seeds and sanitation.',
-        'youtube_link': 'https://www.youtube.com/watch?v=Gv9oKN5D4mc'
+        'youtube_link': 'https://www.youtube.com/watch?v=hyJ11KCHiwQ'
     },
     'Tomato___healthy': {
         'disease_name': 'Healthy',
