@@ -55,7 +55,9 @@ st.markdown("""
             border-radius: 8px;
         }
         .navbar a:hover {
-            background-color: #eee;
+            background-color: 0e1117;
+            border: 2px solid white;
+            color:white;
         }
     </style>
     <div class="navbar">
