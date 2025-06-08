@@ -72,7 +72,7 @@ def predict_disease(img: Image.Image, model, class_labels):
 
 # Main Streamlit app
 def app():
-    st.title("🍃 Plant Disease Predictor")
+    st.title("Plant Disease Predictor")
 
     uploaded_file = st.file_uploader("Upload leaf image", type=["jpg", "jpeg", "png"])
     if uploaded_file is not None:
@@ -129,7 +129,6 @@ def app():
             font-size: 16px;
         ">
             <p><b>Prediction:</b> {predicted_class}</p>
-            <p><b>Confidence:</b> {confidence:.2f}%</p>
             <p><b>Disease Name:</b> {advisory['disease_name']}</p>
             <p><b>Description:</b> {advisory['description']}</p>
             <p><b>Treatment:</b> {advisory['treatment']}</p>
