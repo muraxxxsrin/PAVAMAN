@@ -36,14 +36,14 @@ advisory_data = {
         'youtube_link': 'https://www.youtube.com/watch?v=GaqRNa1s6IM'
     },
 
-    'Cherry_(including_sour)___Powdery_mildew': {
+    'Cherry___Powdery_mildew': {
         'disease_name': 'Powdery Mildew',
         'description': 'Fungal infection causing white powdery coating on leaves.',
         'treatment': 'Apply fungicides such as sulfur or myclobutanil.',
         'prevention': 'Improve air circulation and avoid overhead irrigation.',
         'youtube_link': 'https://www.youtube.com/watch?v=ia3j2A4z9bQ'
     },
-    'Cherry_(including_sour)___healthy': {
+    'Cherry___healthy': {
         'disease_name': 'Healthy',
         'description': 'No disease detected.',
         'treatment': 'No treatment required.',
@@ -51,28 +51,28 @@ advisory_data = {
         'youtube_link': 'https://www.youtube.com/watch?v=GaqRNa1s6IM'
     },
 
-    'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot': {
+    'Corn___Cercospora_leaf_spot Gray_leaf_spot': {
         'disease_name': 'Cercospora Leaf Spot',
         'description': 'Fungal disease causing grayish leaf spots.',
         'treatment': 'Use fungicides labeled for Cercospora control.',
         'prevention': 'Rotate crops and remove infected residue.',
         'youtube_link': 'https://www.youtube.com/watch?v=EfWE9esL4So'
     },
-    'Corn_(maize)___Common_rust_': {
+    'Corn___Common_rust': {
         'disease_name': 'Common Rust',
         'description': 'Fungal disease producing reddish-brown pustules on leaves.',
         'treatment': 'Apply appropriate fungicides.',
         'prevention': 'Use resistant hybrids.',
         'youtube_link': 'http://youtube.com/watch?v=rCMy8ZietMY'
     },
-    'Corn_(maize)___Northern_Leaf_Blight': {
+    'Corn___Northern_Leaf_Blight': {
         'disease_name': 'Northern Leaf Blight',
         'description': 'Fungal disease causing cigar-shaped lesions on leaves.',
         'treatment': 'Fungicides during early disease onset.',
         'prevention': 'Plant resistant hybrids and rotate crops.',
         'youtube_link': 'https://www.youtube.com/watch?v=uafRy5EqwBQ'
     },
-    'Corn_(maize)___healthy': {
+    'Corn___healthy': {
         'disease_name': 'Healthy',
         'description': 'No disease detected.',
         'treatment': 'No treatment required.',
@@ -87,14 +87,14 @@ advisory_data = {
         'prevention': 'Prune to improve air circulation.',
         'youtube_link': 'https://www.youtube.com/watch?v=WVk21qyDeFw'
     },
-    'Grape___Esca_(Black_Measles)': {
+    'Grape__Esca(Black_Measles)': {
         'disease_name': 'Esca (Black Measles)',
         'description': 'Fungal disease causing dark lesions and fruit rot.',
         'treatment': 'Remove infected wood; fungicides have limited effect.',
         'prevention': 'Use certified disease-free planting material.',
         'youtube_link': 'https://www.youtube.com/watch?v=mc0_fpsnSrg'
     },
-    'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)': {
+    'Grape__Leaf_blight(Isariopsis_Leaf_Spot)': {
         'disease_name': 'Isariopsis Leaf Spot',
         'description': 'Fungal disease causing leaf spots and defoliation.',
         'treatment': 'Apply fungicides regularly during growing season.',
@@ -109,7 +109,7 @@ advisory_data = {
         'youtube_link': 'https://www.youtube.com/watch?v=GaqRNa1s6IM'
     },
 
-    'Orange___Haunglongbing_(Citrus_greening)': {
+    'Orange__Haunglongbing(Citrus_greening)': {
         'disease_name': 'Huanglongbing (Citrus Greening)',
         'description': 'Bacterial disease causing yellow shoots, misshapen fruit, and tree decline.',
         'treatment': 'No cure; remove infected trees.',
@@ -132,14 +132,14 @@ advisory_data = {
         'youtube_link': 'https://www.youtube.com/watch?v=GaqRNa1s6IM'
     },
 
-    'Pepper,_bell___Bacterial_spot': {
+    'Pepper,bell__Bacterial_spot': {
         'disease_name': 'Bacterial Spot',
         'description': 'Bacterial disease causing leaf spots and fruit lesions.',
         'treatment': 'Copper sprays and removal of infected plants.',
         'prevention': 'Use certified disease-free seeds.',
         'youtube_link': 'https://www.youtube.com/watch?v=LuB6RZRWCtQ'
     },
-    'Pepper,_bell___healthy': {
+    'Pepper,bell__healthy': {
         'disease_name': 'Healthy',
         'description': 'No disease detected.',
         'treatment': 'No treatment required.',
@@ -283,16 +283,19 @@ advisory_data = {
     "description": "The image does not contain any recognizable leaf. It might be a background image or an unrelated object.",
     "treatment": "No treatment required, as there is no plant disease detected.",
     "prevention": "Please ensure the image contains a clear view of a plant leaf for accurate disease prediction.",
-    "youtube_link": "https://www.youtube.com/watch?v=GaqRNa1s6IM"  # You can pick any general plant health video or a custom one
+    "youtube_link": "https://www.youtube.com/watch?v=GaqRNa1s6IM" 
+    }
 }
-}
-#Todo update the advisory
+
 
 def get_advisory(label):
     if label not in advisory_data:
         return {
             "disease_name": "Unknown",
             "description": "No advisory information found.",
+            "treatment": "N/A",
+            "prevention": "N/A",
+            "youtube_link": None
         }
     return advisory_data[label]
 

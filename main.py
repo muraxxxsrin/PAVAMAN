@@ -1,43 +1,14 @@
-# import streamlit as st
-# from home import app as home_app
-# from docs import app as docs_app
-# from data import app as data_app
-
-# if "page" not in st.session_state:
-#     st.session_state.page = "Home"
-
-# col1, col2, col3, _ = st.columns([1,1,1, 10])
-# with col1:
-#     if st.button("Home"):
-#         st.session_state.page = "Home"
-# with col2:
-#     if st.button("Docs"):
-#         st.session_state.page = "Docs"
-# with col3:
-#     if st.button("Data"):
-#         st.session_state.page = "Data"
-
-# st.markdown("---")  
-# if st.session_state.page == "Home":
-#     home_app()
-# elif st.session_state.page == "Docs":
-#     docs_app()
-# elif st.session_state.page == "Data":
-#     data_app()
-
-
-# Your column buttons here...
 
 import streamlit as st
 from home import app as home_app
 from docs import app as docs_app
 from data import app as data_app
 
-# Use the updated query param API
+
 query_params = st.query_params
 page = query_params.get("page", "Home")
 
-# Top horizontal nav links
+
 st.markdown("""
     <style>
         .navbar {
@@ -67,7 +38,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Load the correct page
+
 if page == "Home":
     home_app()
 elif page == "Docs":

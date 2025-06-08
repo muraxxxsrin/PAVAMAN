@@ -7,6 +7,7 @@ import numpy as np
 from PIL import Image
 from io import BytesIO
 import base64
+from tensorflow.keras.applications.efficientnet import preprocess_input
 
 # Load model once and cache
 @st.cache_resource
@@ -59,10 +60,9 @@ def image_to_base64(img):
     img.save(buffer, format="JPEG")
     return base64.b64encode(buffer.getvalue()).decode()
 
-# Predict the class of a leaf image
 def predict_disease(img: Image.Image, model, class_labels):
-    img = img.resize((160, 160))
-    img_array = image.img_to_array(img) / 255.0
+    img = img.resize((160, 160))  
+    img_array = preprocess_input(image.img_to_array(img))
     img_array = np.expand_dims(img_array, axis=0)
 
     prediction = model.predict(img_array)
@@ -70,7 +70,7 @@ def predict_disease(img: Image.Image, model, class_labels):
     confidence = np.max(prediction) * 100
     return predicted_class, confidence
 
-# Main Streamlit app
+
 def app():
     st.title("Plant Disease Predictor")
 
@@ -81,7 +81,7 @@ def app():
         predicted_class, confidence = predict_disease(img, model, class_labels)
         advisory = get_advisory(predicted_class)
 
-        # Split layout for image and video
+       
         left_col, right_col = st.columns(2)
 
         with left_col:
@@ -95,27 +95,23 @@ def app():
             )
 
         with right_col:
-            youtube_embed = advisory["youtube_link"].replace("watch?v=", "embed/")
-            st.markdown(
-                f"""
-                <iframe width="350" height="250"
-                        src="{youtube_embed}"
-                        frameborder="0"
-                        allowfullscreen
-                        style="border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.2);">
+            youtube_link = advisory["youtube_link"]
+
+            if youtube_link:
+                youtube_embed = youtube_link.replace("watch?v=", "embed/")
+                st.markdown(
+                    f"""
+                    <iframe width="350" height="250"
+                    src="{youtube_embed}"
+                    frameborder="0"
+                    allowfullscreen
+                    style="border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.2);">
                 </iframe>
                 """,
                 unsafe_allow_html=True
-            )
-
-        # # Display predictions and info below
-        # st.markdown("---")
-        # st.markdown(f"**Prediction:** {predicted_class}")
-        # st.markdown(f"**Confidence:** {confidence:.2f}%")
-        # st.markdown(f"**Disease Name:** {advisory['disease_name']}")
-        # st.markdown(f"**Description:** {advisory['description']}")
-        # st.markdown(f"**Treatment:** {advisory['treatment']}")
-        # st.markdown(f"**Prevention:** {advisory['prevention']}")
+                )
+            else:
+                st.warning("YouTube video not available for this disease.")
         st.markdown("---")
 
         info_box = f"""

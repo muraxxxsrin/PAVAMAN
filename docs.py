@@ -3,7 +3,6 @@ import streamlit as st
 def app():
     st.title("📖 How to Run the Plant Disease Predictor App")
 
-    # Container box style
     container_style = """
         border: 2px solid white; 
         padding: 20px; 
